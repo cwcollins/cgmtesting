@@ -60,6 +60,15 @@ public class MainWindow extends javax.swing.JFrame {
     public String getCurrentTest() {
         return types.tests[testTypesBox.getSelectedIndex()];
     }
+    
+    /**
+     * Performs setup before the tests can begin
+     */
+    public void setup() {
+        countdown();
+        controller.setTestMode(testTypesBox.getSelectedIndex());
+        controller.startTest(getCurrentTest());
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -77,6 +86,7 @@ public class MainWindow extends javax.swing.JFrame {
         backButton = new javax.swing.JButton();
         fwdButton = new javax.swing.JButton();
         infoLabel = new javax.swing.JLabel();
+        quitButton = new javax.swing.JButton();
         bottomPanel = new javax.swing.JPanel();
         homeButton = new javax.swing.JButton();
         midPanel = new javax.swing.JPanel();
@@ -94,12 +104,29 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel1.setText("Output file:");
 
         backButton.setText("<--");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
 
         fwdButton.setText("-->");
+        fwdButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fwdButtonActionPerformed(evt);
+            }
+        });
 
-        infoLabel.setFont(new java.awt.Font("Courier New", 0, 30)); // NOI18N
+        infoLabel.setFont(new java.awt.Font("Courier New", 0, 36)); // NOI18N
         infoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         infoLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        quitButton.setText("X");
+        quitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
         topPanel.setLayout(topPanelLayout);
@@ -113,26 +140,34 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(backButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fwdButton))
-                    .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, topPanelLayout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(outputFile))
-                        .addComponent(testTypesBox, javax.swing.GroupLayout.Alignment.LEADING, 0, 183, Short.MAX_VALUE)))
+                    .addGroup(topPanelLayout.createSequentialGroup()
+                        .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, topPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(outputFile))
+                            .addComponent(testTypesBox, javax.swing.GroupLayout.Alignment.LEADING, 0, 183, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 202, Short.MAX_VALUE)
+                        .addComponent(quitButton)))
                 .addContainerGap())
         );
         topPanelLayout.setVerticalGroup(
             topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(topPanelLayout.createSequentialGroup()
-                .addComponent(testTypesBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(outputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(backButton)
-                    .addComponent(fwdButton))
+                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(topPanelLayout.createSequentialGroup()
+                        .addComponent(testTypesBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(outputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(backButton)
+                            .addComponent(fwdButton)))
+                    .addGroup(topPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(quitButton)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(infoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -140,6 +175,11 @@ public class MainWindow extends javax.swing.JFrame {
         getContentPane().add(topPanel, java.awt.BorderLayout.PAGE_START);
 
         homeButton.setText("Home");
+        homeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                homeButtonActionPerformed(evt);
+            }
+        });
         bottomPanel.add(homeButton);
 
         getContentPane().add(bottomPanel, java.awt.BorderLayout.PAGE_END);
@@ -169,11 +209,42 @@ private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
 private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
  // TODO add your handling code here:
     if(!keyboardTesting) {
-        countdown();
-        controller.startTest(getCurrentTest());
+        setup();
     }
     
 }//GEN-LAST:event_startButtonActionPerformed
+
+/**
+ * When the back button is clicked - corresponds to value 1
+ * @param evt 
+ */
+private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+ // TODO add your handling code here:
+}//GEN-LAST:event_backButtonActionPerformed
+
+/**
+ * When the fwd button is clicked - corresponds to value 2
+ * @param evt 
+ */
+private void fwdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fwdButtonActionPerformed
+ // TODO add your handling code here:
+}//GEN-LAST:event_fwdButtonActionPerformed
+
+/**
+ * When the home button is clicked - corresponds to value 0
+ * @param evt 
+ */
+private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
+ // TODO add your handling code here:
+}//GEN-LAST:event_homeButtonActionPerformed
+
+/**
+ * When the quit button is clicked - corresponds to value 3
+ * @param evt 
+ */
+private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
+ // TODO add your handling code here:
+}//GEN-LAST:event_quitButtonActionPerformed
 
 /**
  * When a key is typed perform an action
@@ -186,7 +257,7 @@ public class TestKeyDispatcher implements KeyEventDispatcher {
             if(keyboardTesting) {
                 System.out.println("Key code: " + e.getKeyCode());
                 if(e.getKeyCode() == 32) {
-                    countdown();
+                    setup();
                     return true;
                 }
             }
@@ -272,6 +343,7 @@ class CountdownTask extends TimerTask {
         fwdButton.setVisible(false);
         homeButton.setVisible(false);
         startButton.setVisible(false);
+        quitButton.setVisible(false);
         infoLabel.setText("Press the space bar to begin");
     }
     
@@ -283,6 +355,7 @@ class CountdownTask extends TimerTask {
         fwdButton.setVisible(true);
         homeButton.setVisible(true);
         startButton.setVisible(true);
+        quitButton.setVisible(true);
         infoLabel.setText("Click the button to begin");
     }
     
@@ -295,6 +368,7 @@ class CountdownTask extends TimerTask {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel midPanel;
     private javax.swing.JTextField outputFile;
+    private javax.swing.JButton quitButton;
     private javax.swing.JButton startButton;
     private javax.swing.JComboBox testTypesBox;
     private javax.swing.JPanel topPanel;

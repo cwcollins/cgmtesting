@@ -17,10 +17,16 @@ public class EvaluationTest {
     /**
      * The times for each test
      */
-    ArrayList<Integer> times;
+    ArrayList<Long> times;
     
     /**
      * The number of total errors for each test
      */
     int errors;
+    
+    public EvaluationTest(String testType) {
+        type = testType;
+        times = new ArrayList<Long>();
+        errors = 0;
+    }
 }

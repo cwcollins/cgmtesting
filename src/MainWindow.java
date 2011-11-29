@@ -18,10 +18,12 @@ import java.awt.Frame;
 public class MainWindow extends javax.swing.JFrame {
     
     private TestTypes types;
+    private TestController controller;
 
     /** Creates new form MainWindow */
     public MainWindow() {
         types = new TestTypes();
+        controller = new TestController();
         initComponents();
         this.setExtendedState(this.MAXIMIZED_BOTH);
         this.populateTestTypes();
@@ -72,7 +74,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         fwdButton.setText("-->");
 
-        infoLabel.setFont(new java.awt.Font("Courier New", 0, 24));
+        infoLabel.setFont(new java.awt.Font("Courier New", 0, 30)); // NOI18N
         infoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         infoLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
@@ -173,7 +175,7 @@ private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
      */
     public void changeDisplay() {
         int index = testTypesBox.getSelectedIndex();
-        System.out.println(index);
+        //System.out.println(index);
         if(index == 3) {
             showButtons();
         }
@@ -181,7 +183,6 @@ private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
             hideButtons();
         }
     }
-    
     
     /**
      * Hides all the buttons
@@ -191,6 +192,7 @@ private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
         fwdButton.setVisible(false);
         homeButton.setVisible(false);
         startButton.setVisible(false);
+        infoLabel.setText("Press the space bar to begin");
     }
     
     /**
@@ -201,6 +203,7 @@ private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
         fwdButton.setVisible(true);
         homeButton.setVisible(true);
         startButton.setVisible(true);
+        infoLabel.setText("Click the button to begin");
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

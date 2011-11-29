@@ -1,28 +1,20 @@
 
-import java.io.*;
+import java.util.ArrayList;
 
 /**
  *
  * @author Chet
- * Runs the testing system include file i/o and timing
  */
 public class TestController {
     
-    // writes to the testing file
-    private BufferedWriter out;
+    /**
+     * Allows writing to the testing file
+     */
+    TestWriter writer;
     
     /**
-     * Creates a testing file
-     * @param name the name of the file to create
+     * Stores the completed tests
      */
-    public void createFile(String name) {
-        try {
-            FileWriter fstream = new FileWriter(name);
-            out = new BufferedWriter(fstream);
-        }
-        catch(Exception ex) {}   
-    }
-    
-    
+    ArrayList<EvaluationTest> tests;
     
 }

@@ -1,5 +1,9 @@
 
 import java.awt.Frame;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /*
  * To change this template, choose Tools | Templates
@@ -19,11 +23,15 @@ public class MainWindow extends javax.swing.JFrame {
     
     private TestTypes types;
     private TestController controller;
+    private KeyboardFocusManager manager;
+    private boolean keyboardTesting;
 
     /** Creates new form MainWindow */
     public MainWindow() {
         types = new TestTypes();
         controller = new TestController();
+        manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher(new TestKeyDispatcher());	
         initComponents();
         this.setExtendedState(this.MAXIMIZED_BOTH);
         this.populateTestTypes();
@@ -122,6 +130,11 @@ public class MainWindow extends javax.swing.JFrame {
         getContentPane().add(bottomPanel, java.awt.BorderLayout.PAGE_END);
 
         startButton.setText("Click here to begin");
+        startButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startButtonActionPerformed(evt);
+            }
+        });
         midPanel.add(startButton);
 
         getContentPane().add(midPanel, java.awt.BorderLayout.CENTER);
@@ -133,6 +146,37 @@ private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
     // Change display based on what is selected
     changeDisplay();
 }//GEN-LAST:event_testTypesBoxItemStateChanged
+
+/**
+ * When the start button is clicked
+ * @param evt the button click event
+ */
+private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
+ // TODO add your handling code here:
+}//GEN-LAST:event_startButtonActionPerformed
+
+/**
+ * When a key is typed perform an action
+ * @param e the key event
+ */
+public class TestKeyDispatcher implements KeyEventDispatcher {
+
+        @Override
+        public boolean dispatchKeyEvent(KeyEvent e) {
+            
+            if(keyboardTesting) {
+                if(e.getKeyCode() == 32) {
+                    // Start keyboard test
+                    System.out.println("Space bar pressed");
+                    return true;
+                }
+            }
+            else {
+                System.out.println("Not listening");
+            }
+            return false;
+        }
+}
 
     /**
      * @param args the command line arguments
@@ -178,9 +222,11 @@ private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
         //System.out.println(index);
         if(index == 3) {
             showButtons();
+            keyboardTesting = false;
         }
         else {
             hideButtons();
+            keyboardTesting = true;
         }
     }
     

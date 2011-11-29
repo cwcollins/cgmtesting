@@ -52,6 +52,14 @@ public class MainWindow extends javax.swing.JFrame {
             testTypesBox.addItem(types.tests[i]);
         }
     }
+    
+    /**
+     * Obtains the currently selected test
+     * @return the currently selected test
+     */
+    public String getCurrentTest() {
+        return types.tests[testTypesBox.getSelectedIndex()];
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -160,7 +168,11 @@ private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
  */
 private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
  // TODO add your handling code here:
-    countdown();
+    if(!keyboardTesting) {
+        countdown();
+        controller.startTest(getCurrentTest());
+    }
+    
 }//GEN-LAST:event_startButtonActionPerformed
 
 /**
@@ -168,13 +180,15 @@ private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
  * @param e the key event
  */
 public class TestKeyDispatcher implements KeyEventDispatcher {
-
         @Override
         public boolean dispatchKeyEvent(KeyEvent e) {
             
             if(keyboardTesting) {
                 System.out.println("Key code: " + e.getKeyCode());
-                
+                if(e.getKeyCode() == 32) {
+                    countdown();
+                    return true;
+                }
             }
             else {
                 System.out.println("Not listening");
@@ -193,10 +207,9 @@ public void countdown() {
 }
 
 class CountdownTask extends TimerTask {
-        public void run() {
-            Toolkit.getDefaultToolkit().beep();
-            timer.cancel();
-        }
+    public void run() {
+        Toolkit.getDefaultToolkit().beep();
+        timer.cancel();}
  }
 
     /**

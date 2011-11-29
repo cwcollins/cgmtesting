@@ -16,11 +16,24 @@ import java.awt.Frame;
  * @author Chet
  */
 public class MainWindow extends javax.swing.JFrame {
+    
+    private TestTypes types;
 
     /** Creates new form MainWindow */
     public MainWindow() {
+        types = new TestTypes();
         initComponents();
         this.setExtendedState(this.MAXIMIZED_BOTH);
+        this.populateTestTypes();
+        this.changeDisplay();
+    }
+    
+    private void populateTestTypes()
+    {
+        for(int i=0; i<types.tests.length; i++)
+        {
+            testTypesBox.addItem(types.tests[i]);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -32,37 +45,26 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jComboBox1 = new javax.swing.JComboBox();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        testTypes = new javax.swing.JComboBox();
+        topPanel = new javax.swing.JPanel();
+        testTypesBox = new javax.swing.JComboBox();
         outputFile = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         backButton = new javax.swing.JButton();
         fwdButton = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
+        infoLabel = new javax.swing.JLabel();
+        bottomPanel = new javax.swing.JPanel();
         homeButton = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
+        midPanel = new javax.swing.JPanel();
         startButton = new javax.swing.JButton();
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hands on Keyboard", "Hands away from Keyboard", "Hands on Trackpad" }));
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 420, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 205, Short.MAX_VALUE)
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("cgmtesting");
 
-        testTypes.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Webcam gestures", "Hands on keyboard", "Hands away from keyboard", "Hands on trackpad" }));
+        testTypesBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                testTypesBoxItemStateChanged(evt);
+            }
+        });
 
         jLabel1.setText("Output file:");
 
@@ -70,61 +72,65 @@ public class MainWindow extends javax.swing.JFrame {
 
         fwdButton.setText("-->");
 
-        jLabel2.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Hello World!");
-        jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        infoLabel.setFont(new java.awt.Font("Courier New", 0, 24));
+        infoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        infoLabel.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout topPanelLayout = new javax.swing.GroupLayout(topPanel);
+        topPanel.setLayout(topPanelLayout);
+        topPanelLayout.setHorizontalGroup(
+            topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(topPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(infoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                    .addGroup(topPanelLayout.createSequentialGroup()
                         .addComponent(backButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fwdButton))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, topPanelLayout.createSequentialGroup()
                             .addComponent(jLabel1)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(outputFile))
-                        .addComponent(testTypes, javax.swing.GroupLayout.Alignment.LEADING, 0, 183, Short.MAX_VALUE)))
+                        .addComponent(testTypesBox, javax.swing.GroupLayout.Alignment.LEADING, 0, 183, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(testTypes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        topPanelLayout.setVerticalGroup(
+            topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(topPanelLayout.createSequentialGroup()
+                .addComponent(testTypesBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(outputFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(topPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(backButton)
                     .addComponent(fwdButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(infoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
+        getContentPane().add(topPanel, java.awt.BorderLayout.PAGE_START);
 
         homeButton.setText("Home");
-        jPanel3.add(homeButton);
+        bottomPanel.add(homeButton);
 
-        getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
+        getContentPane().add(bottomPanel, java.awt.BorderLayout.PAGE_END);
 
         startButton.setText("Click here to begin");
-        jPanel4.add(startButton);
+        midPanel.add(startButton);
 
-        getContentPane().add(jPanel4, java.awt.BorderLayout.CENTER);
+        getContentPane().add(midPanel, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_testTypesBoxItemStateChanged
+    // Change display based on what is selected
+    changeDisplay();
+}//GEN-LAST:event_testTypesBoxItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -161,19 +167,53 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
     }
+    
+    /**
+     * Change display based on combo box selection
+     */
+    public void changeDisplay() {
+        int index = testTypesBox.getSelectedIndex();
+        System.out.println(index);
+        if(index == 3) {
+            showButtons();
+        }
+        else {
+            hideButtons();
+        }
+    }
+    
+    
+    /**
+     * Hides all the buttons
+     */
+    public void hideButtons() {
+        backButton.setVisible(false);
+        fwdButton.setVisible(false);
+        homeButton.setVisible(false);
+        startButton.setVisible(false);
+    }
+    
+    /**
+     * Shows all the buttons
+     */
+    public void showButtons() {
+        backButton.setVisible(true);
+        fwdButton.setVisible(true);
+        homeButton.setVisible(true);
+        startButton.setVisible(true);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JPanel bottomPanel;
     private javax.swing.JButton fwdButton;
     private javax.swing.JButton homeButton;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JLabel infoLabel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel midPanel;
     private javax.swing.JTextField outputFile;
     private javax.swing.JButton startButton;
-    private javax.swing.JComboBox testTypes;
+    private javax.swing.JComboBox testTypesBox;
+    private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
 }

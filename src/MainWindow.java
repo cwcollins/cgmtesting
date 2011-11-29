@@ -2,8 +2,13 @@
 import java.awt.Frame;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /*
  * To change this template, choose Tools | Templates
@@ -25,6 +30,8 @@ public class MainWindow extends javax.swing.JFrame {
     private TestController controller;
     private KeyboardFocusManager manager;
     private boolean keyboardTesting;
+    private Timer timer;
+    int countdownTime;
 
     /** Creates new form MainWindow */
     public MainWindow() {
@@ -153,6 +160,7 @@ private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-F
  */
 private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
  // TODO add your handling code here:
+    countdown();
 }//GEN-LAST:event_startButtonActionPerformed
 
 /**
@@ -165,11 +173,8 @@ public class TestKeyDispatcher implements KeyEventDispatcher {
         public boolean dispatchKeyEvent(KeyEvent e) {
             
             if(keyboardTesting) {
-                if(e.getKeyCode() == 32) {
-                    // Start keyboard test
-                    System.out.println("Space bar pressed");
-                    return true;
-                }
+                System.out.println("Key code: " + e.getKeyCode());
+                
             }
             else {
                 System.out.println("Not listening");
@@ -177,6 +182,22 @@ public class TestKeyDispatcher implements KeyEventDispatcher {
             return false;
         }
 }
+
+/**
+ * Countdown timer before tests begin
+ */
+public void countdown() {
+    infoLabel.setText("Starting test in 5 seconds...");
+    timer = new Timer();
+    timer.schedule(new CountdownTask(), 5000);
+}
+
+class CountdownTask extends TimerTask {
+        public void run() {
+            Toolkit.getDefaultToolkit().beep();
+            timer.cancel();
+        }
+ }
 
     /**
      * @param args the command line arguments

@@ -42,7 +42,7 @@ public class MainWindow extends javax.swing.JFrame {
         fwdButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        homeButton = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         startButton = new javax.swing.JButton();
 
@@ -61,8 +61,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("cgmtesting");
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         testTypes.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Webcam gestures", "Hands on keyboard", "Hands away from keyboard", "Hands on trackpad" }));
 
@@ -84,7 +82,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(backButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -115,8 +113,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
-        jButton1.setText("Home");
-        jPanel3.add(jButton1);
+        homeButton.setText("Home");
+        jPanel3.add(homeButton);
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
 
@@ -166,7 +164,7 @@ public class MainWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JButton fwdButton;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton homeButton;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

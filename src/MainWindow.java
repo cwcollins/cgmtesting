@@ -6,6 +6,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Timer;
@@ -26,36 +27,71 @@ import java.util.TimerTask;
  * @author Chet
  */
 public class MainWindow extends javax.swing.JFrame {
-    
-    private TestTypes types;
-    private TestController controller;
-    private KeyboardFocusManager manager;
-    private boolean keyboardTesting;
-    private Timer timer;
+
+    TestTypes types;
+    TestController controller;
+    KeyboardFocusManager manager;
+    boolean keyboardTesting;
     int countdownTime;
     Color defaultColor;
 
     /** Creates new form MainWindow */
     public MainWindow() {
         types = new TestTypes();
-        controller = new TestController();
-        manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        manager.addKeyEventDispatcher(new TestKeyDispatcher());	
+        controller = new TestController(this);
         initComponents();
         this.setExtendedState(this.MAXIMIZED_BOTH);
         this.populateTestTypes();
         this.changeDisplay();
+        this.setFocusable(true);
+        this.requestFocus();
+        this.addKeyListener(new TestKeyListener());
         defaultColor = startButton.getBackground();
     }
-    
-    private void populateTestTypes()
-    {
-        for(int i=0; i<types.tests.length; i++)
-        {
+
+    public class TestKeyListener extends KeyAdapter {
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            
+            if(outputFile.isFocusOwner()) {
+                return;
+            }
+            
+            System.out.println("Key code: " + e.getKeyCode() + "modifiers: " + e.getModifiers());
+
+            if (e.getKeyChar() == ' ') {
+                setup();
+                return;
+            }
+
+            if (keyboardTesting && controller.curTest != null) {
+                if (e.getKeyCode() == 37 && e.getModifiers() == 8) {
+                    controller.buttonPressed("Alt+Left");
+                } else if (e.getKeyCode() == 39 && e.getModifiers() == 8) {
+                    controller.buttonPressed("Alt+Right");
+                } else if (e.getKeyCode() == 27) {
+                    controller.buttonPressed("Esc");
+                } else if (e.getKeyCode() == 84) {
+                    controller.buttonPressed("T");
+                } else if (e.getKeyCode() == 18 && e.getModifiers() == 8 ) {
+                }
+                else {
+                    controller.buttonPressed("");
+                }
+            } else {
+                System.out.println("Not listening");
+            }
+
+        }
+    }
+
+    private void populateTestTypes() {
+        for (int i = 0; i < types.tests.length; i++) {
             testTypesBox.addItem(types.tests[i]);
         }
     }
-    
+
     /**
      * Obtains the currently selected test
      * @return the currently selected test
@@ -63,34 +99,48 @@ public class MainWindow extends javax.swing.JFrame {
     public String getCurrentTest() {
         return types.tests[testTypesBox.getSelectedIndex()];
     }
-    
+
     /**
      * Performs setup before the tests can begin
      */
     public void setup() {
         controller.setTestMode(testTypesBox.getSelectedIndex());
         controller.runTest(getCurrentTest());
+        controller.startTimer();
         resetColor();
         
-        switch(controller.selection) {
-            case 0:
-                homeButton.setBackground(Color.green);
-                break;
-            case 1:
-                backButton.setBackground(Color.green);
-                break;
-            case 2:
-                fwdButton.setBackground(Color.green);
-                break;
-            case 3:
-                quitButton.setBackground(Color.green);
-                break;
-            default:
-                break;
-                
+        String[] action = controller.keys;
+        
+        if(testTypesBox.getSelectedIndex() == 0) {
+            action = controller.gestures;
+        }
+        else {
+            action = controller.keys;
+        }
+
+        if (!keyboardTesting) {
+            infoLabel.setText("Click the green button");
+            switch (controller.selection) {
+                case 0:
+                    homeButton.setBackground(Color.green);
+                    break;
+                case 1:
+                    backButton.setBackground(Color.green);
+                    break;
+                case 2:
+                    fwdButton.setBackground(Color.green);
+                    break;
+                case 3:
+                    quitButton.setBackground(Color.green);
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            infoLabel.setText(action[controller.selection]);
         }
     }
-    
+
     public void resetColor() {
         homeButton.setBackground(defaultColor);
         backButton.setBackground(defaultColor);
@@ -229,83 +279,60 @@ public class MainWindow extends javax.swing.JFrame {
 private void testTypesBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_testTypesBoxItemStateChanged
     // Change display based on what is selected
     changeDisplay();
+    this.requestFocus();
 }//GEN-LAST:event_testTypesBoxItemStateChanged
 
-/**
- * When the start button is clicked
- * @param evt the button click event
- */
+    /**
+     * When the start button is clicked
+     * @param evt the button click event
+     */
 private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
- // TODO add your handling code here:
-    if(!keyboardTesting) {
+    // TODO add your handling code here:
+    if (!keyboardTesting) {
         setup();
     }
     startButton.setBackground(defaultColor);
-    controller.startTimer();
-    
 }//GEN-LAST:event_startButtonActionPerformed
 
-/**
- * When the back button is clicked - corresponds to value 1
- * @param evt 
- */
+    /**
+     * When the back button is clicked - corresponds to value 1
+     * @param evt 
+     */
 private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
- // TODO add your handling code here:
+    // TODO add your handling code here:
     controller.buttonPressed("Back");
     backButton.setBackground(defaultColor);
 }//GEN-LAST:event_backButtonActionPerformed
 
-/**
- * When the fwd button is clicked - corresponds to value 2
- * @param evt 
- */
+    /**
+     * When the fwd button is clicked - corresponds to value 2
+     * @param evt 
+     */
 private void fwdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fwdButtonActionPerformed
- // TODO add your handling code here:
+    // TODO add your handling code here:
     controller.buttonPressed("Fwd");
     fwdButton.setBackground(defaultColor);
 }//GEN-LAST:event_fwdButtonActionPerformed
 
-/**
- * When the home button is clicked - corresponds to value 0
- * @param evt 
- */
+    /**
+     * When the home button is clicked - corresponds to value 0
+     * @param evt 
+     */
 private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
- // TODO add your handling code here:
+    // TODO add your handling code here:
     controller.buttonPressed("Home");
     homeButton.setBackground(defaultColor);
 }//GEN-LAST:event_homeButtonActionPerformed
 
-/**
- * When the quit button is clicked - corresponds to value 3
- * @param evt 
- */
+    /**
+     * When the quit button is clicked - corresponds to value 3
+     * @param evt 
+     */
 private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
- // TODO add your handling code here:
+    // TODO add your handling code here:
     controller.buttonPressed("Quit");
     quitButton.setBackground(defaultColor);
 }//GEN-LAST:event_quitButtonActionPerformed
-
-/**
- * When a key is typed perform an action
- * @param e the key event
- */
-public class TestKeyDispatcher implements KeyEventDispatcher {
-        @Override
-        public boolean dispatchKeyEvent(KeyEvent e) {
-            
-            if(keyboardTesting) {
-                System.out.println("Key code: " + e.getKeyCode());
-                if(e.getKeyCode() == 32) {
-                    setup();
-                    return true;
-                }
-            }
-            else {
-                System.out.println("Not listening");
-            }
-            return false;
-        }
-}
 
     /**
      * @param args the command line arguments
@@ -342,23 +369,30 @@ public class TestKeyDispatcher implements KeyEventDispatcher {
             }
         });
     }
-    
+
+    public void changeLabel(String label) {
+        infoLabel.setText(label);
+    }
+
+    public String getFileName() {
+        return outputFile.getText();
+    }
+
     /**
      * Change display based on combo box selection
      */
     public void changeDisplay() {
         int index = testTypesBox.getSelectedIndex();
         //System.out.println(index);
-        if(index == 3) {
+        if (index == 3) {
             showButtons();
             keyboardTesting = false;
-        }
-        else {
+        } else {
             hideButtons();
             keyboardTesting = true;
         }
     }
-    
+
     /**
      * Hides all the buttons
      */
@@ -370,7 +404,7 @@ public class TestKeyDispatcher implements KeyEventDispatcher {
         quitButton.setVisible(false);
         infoLabel.setText("Press the space bar to begin");
     }
-    
+
     /**
      * Shows all the buttons
      */
@@ -382,7 +416,6 @@ public class TestKeyDispatcher implements KeyEventDispatcher {
         quitButton.setVisible(true);
         infoLabel.setText("Click the button to begin");
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
     private javax.swing.JPanel bottomPanel;

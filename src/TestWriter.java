@@ -1,5 +1,7 @@
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,7 +19,7 @@ public class TestWriter {
      */
     public boolean createFile(String name) {
         try {
-            FileWriter fstream = new FileWriter(name);
+            FileWriter fstream = new FileWriter(name,true);
             out = new BufferedWriter(fstream);
         }
         catch(Exception ex) {}   
@@ -30,10 +32,18 @@ public class TestWriter {
      */
     public void write(String line) {
         try {
-            out.write(line);
+            out.write(line+"\n");
         }
         catch(Exception ex) {}
         
+    }
+    
+    public void close() {
+        try {
+            out.close();
+        } catch (IOException ex) {
+            Logger.getLogger(TestWriter.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     

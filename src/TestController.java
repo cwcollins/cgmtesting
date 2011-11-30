@@ -12,6 +12,8 @@ public class TestController {
      */
     TestWriter writer;
     
+    MainWindow window;
+    
     /**
      * Stores the completed tests
      */
@@ -48,7 +50,7 @@ public class TestController {
     /**
      * The number of trials for each test
      */
-    final int numTrials = 40;
+    final int numTrials = 5;
     
     int trialCounter;
     
@@ -62,11 +64,13 @@ public class TestController {
     /**
      * Constructor to set up all the instances
      */
-    public TestController() {
+    public TestController(MainWindow main) {
+        window = main;
         writer = new TestWriter();
         timer = new StopWatch();
         randomizer = new Random();
         tests = new ArrayList<EvaluationTest>();
+        trialCounter = 1;
     }
     
     /**
@@ -94,29 +98,77 @@ public class TestController {
      */
     public void runTest(String type) {
         // Create a test to insert data into
-        if(trialCounter == 0) {
+        if(trialCounter == 1) {
             curTest = new EvaluationTest(type);
         }
     }
     
     public void buttonPressed(String button) {
         
-        if(button.equals(buttons[selection])) {
+        if(curTest == null){
+            return;
+        }
+        
+        String[] action = keys;
+        
+        switch(testMode) {
+            case 0:
+                action = keys;
+                break;
+            case 1:
+                action = keys;
+                break;
+            case 2:
+                action = keys;
+                break;
+            case 3:
+                action = buttons;
+                break;
+            default:
+                break;
+        }
+        
+        
+        if(button.equals(action[selection])) {
             curTest.times.add(timer.getElapsedTime());
             System.out.println("time: " + timer.getElapsedTime()+ " trial: " + trialCounter);;
             timer.stop();
             trialCounter++;
             randomize();
+            if(window.keyboardTesting)
+            {
+                window.changeLabel("Press the space bar to begin");
+            }
+            else {
+                window.changeLabel("Click the button to begin");
+            }
             runTest(curTest.type);
+            
         }
         else {
+           
             curTest.errors++;
         }
         
-        if(trialCounter == numTrials) {
+        if(trialCounter > numTrials) {
             tests.add(curTest);
-            trialCounter = 0;
+            window.changeLabel("Test complete");
+            writeResults();
+            trialCounter = 1;
         }
+    }
+    
+    public void writeResults() {
+        String line = curTest.type;
+        
+        for(int i=0; i< curTest.times.size(); i++) {
+            line += "," + curTest.times.get(i);
+        }
+        line += ","+curTest.errors+"\n";
+        
+        writer.createFile(window.getFileName());
+        writer.write(line);
+        writer.close();
     }
     
     /**

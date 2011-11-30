@@ -1,4 +1,5 @@
 
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -32,6 +33,7 @@ public class MainWindow extends javax.swing.JFrame {
     private boolean keyboardTesting;
     private Timer timer;
     int countdownTime;
+    Color defaultColor;
 
     /** Creates new form MainWindow */
     public MainWindow() {
@@ -43,6 +45,7 @@ public class MainWindow extends javax.swing.JFrame {
         this.setExtendedState(this.MAXIMIZED_BOTH);
         this.populateTestTypes();
         this.changeDisplay();
+        defaultColor = startButton.getBackground();
     }
     
     private void populateTestTypes()
@@ -65,9 +68,35 @@ public class MainWindow extends javax.swing.JFrame {
      * Performs setup before the tests can begin
      */
     public void setup() {
-        countdown();
         controller.setTestMode(testTypesBox.getSelectedIndex());
-        controller.startTest(getCurrentTest());
+        controller.runTest(getCurrentTest());
+        resetColor();
+        
+        switch(controller.selection) {
+            case 0:
+                homeButton.setBackground(Color.green);
+                break;
+            case 1:
+                backButton.setBackground(Color.green);
+                break;
+            case 2:
+                fwdButton.setBackground(Color.green);
+                break;
+            case 3:
+                quitButton.setBackground(Color.green);
+                break;
+            default:
+                break;
+                
+        }
+    }
+    
+    public void resetColor() {
+        homeButton.setBackground(defaultColor);
+        backButton.setBackground(defaultColor);
+        fwdButton.setBackground(defaultColor);
+        quitButton.setBackground(defaultColor);
+        startButton.setBackground(defaultColor);
     }
 
     /** This method is called from within the constructor to
@@ -211,6 +240,8 @@ private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     if(!keyboardTesting) {
         setup();
     }
+    startButton.setBackground(defaultColor);
+    controller.startTimer();
     
 }//GEN-LAST:event_startButtonActionPerformed
 
@@ -220,6 +251,8 @@ private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
  */
 private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
  // TODO add your handling code here:
+    controller.buttonPressed("Back");
+    backButton.setBackground(defaultColor);
 }//GEN-LAST:event_backButtonActionPerformed
 
 /**
@@ -228,6 +261,8 @@ private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
  */
 private void fwdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fwdButtonActionPerformed
  // TODO add your handling code here:
+    controller.buttonPressed("Fwd");
+    fwdButton.setBackground(defaultColor);
 }//GEN-LAST:event_fwdButtonActionPerformed
 
 /**
@@ -236,6 +271,8 @@ private void fwdButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
  */
 private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeButtonActionPerformed
  // TODO add your handling code here:
+    controller.buttonPressed("Home");
+    homeButton.setBackground(defaultColor);
 }//GEN-LAST:event_homeButtonActionPerformed
 
 /**
@@ -244,6 +281,8 @@ private void homeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
  */
 private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
  // TODO add your handling code here:
+    controller.buttonPressed("Quit");
+    quitButton.setBackground(defaultColor);
 }//GEN-LAST:event_quitButtonActionPerformed
 
 /**
@@ -267,21 +306,6 @@ public class TestKeyDispatcher implements KeyEventDispatcher {
             return false;
         }
 }
-
-/**
- * Countdown timer before tests begin
- */
-public void countdown() {
-    infoLabel.setText("Starting test in 5 seconds...");
-    timer = new Timer();
-    timer.schedule(new CountdownTask(), 5000);
-}
-
-class CountdownTask extends TimerTask {
-    public void run() {
-        Toolkit.getDefaultToolkit().beep();
-        timer.cancel();}
- }
 
     /**
      * @param args the command line arguments

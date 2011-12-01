@@ -50,7 +50,7 @@ public class TestController {
     /**
      * The number of trials for each test
      */
-    final int numTrials = 5;
+    final int numTrials = 30;
     
     int trialCounter;
     
